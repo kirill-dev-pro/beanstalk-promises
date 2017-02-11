@@ -19,10 +19,14 @@ module.exports = class Beanstalk {
         .on('close', function(err){
           if (err)
           that.client.end()
+          if (that.debug) console.log('Beanstalk connection closed');
           if (that.reconnect) {
             that.connect(host, port, reconnect).then(()=>{
+              if (that.debug) console.log('Reconnected to beanstalk');
               resolve()
             })
+          } else {
+            if (that.debug) console.log('No reconnection');
           }
         }).connect()
       } catch(err) {
