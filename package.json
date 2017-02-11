@@ -1,0 +1,18 @@
+{
+  "name": "beanstalk-promises",
+  "version": "0.0.1",
+  "description": "Promise wraper for fivebeans client so you can use promises instead of callbacks and await them",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fivebeans",
+    "beanstalk",
+    "beanstalkd",
+    "promise",
+    "promises"
+  ],
+  "author": "Kirill <opoxmeloid@yandex.ru> (https://github.com/Zmeu213)",
+  "license": "MIT"
+}
