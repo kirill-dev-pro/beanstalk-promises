@@ -9,7 +9,7 @@ async function main () {
 	let client = new Beanstalk();
 	await client.connect('127.0.0.1', 11300, 1000);
 	await client.watchTube('test');
-    let job = await client.getJob();
+	let job = await client.getJob();
 	await client.quit();
 }
 
