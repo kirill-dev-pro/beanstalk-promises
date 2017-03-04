@@ -134,26 +134,26 @@ module.exports = class Beanstalk {
 
   putJob(data) {
     return new Promise((resolve, reject)=>{
-      try {
-        data = JSON.stringify(data);
-        this.client.put(0, 0, data._ttl || (this.default_ttl*2), data, function(err, jobid) {
+      data = JSON.stringify(data);
+      this.client.put(0, 0, data._ttl || (this.default_ttl*2), data, function(err, jobid) {
+        if (!err) {
           resolve(jobid);
-        });
-      } catch (err) {
-        reject(err)
-      }
+        } else {
+          console.log(err);
+          reject(err);
+        }
+      });
     })
   }
 
   statsTube(name) {
     return new Promise((resolve, reject)=>{
-      try {
-        this.client.stats_tube(name, function(err, res){
+      this.client.stats_tube(name, function(err, res){
+        if (!err)
           resolve(res)
-        });
-      } catch (err) {
-        reject(err)
-      }
+        else
+          reject(err)
+      });
     })
   }
 
