@@ -124,7 +124,7 @@ module.exports = class Beanstalk {
       this.client.peek_ready((err, jobid, payload)=>{
         if (!err && jobid)
           resolve(true);
-        else if (err == 'NOT_FOUND')
+        else if (err === 'NOT_FOUND')
           resolve(false);
         else
           reject(err)
