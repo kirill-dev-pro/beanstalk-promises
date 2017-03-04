@@ -60,9 +60,9 @@ module.exports = class Beanstalk {
 
   useTube(tube) {
     return new Promise((resolve,reject)=>{
-      this.client.use(tube, (err, numused)=>{
+      this.client.use(tube, (err, usedTube)=>{
         if (!err)
-          resolve(numused);
+          resolve(usedTube);
         else
           reject(err)
       })
