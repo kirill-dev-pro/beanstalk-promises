@@ -32,7 +32,7 @@ Disconnects the client, no reconnect.
 - `.watchTube(tube)` return number of watched tubes
   - `tube` name of tube to watch 
   
-- `.useTube(tube)` return number of used tubes
+- `.useTube(tube)` return name of tube used used by client
   - `tube` name of tube to use
   
 - `.getJob()` return a `job`. Get available for reserve job from *tubes* watched by client.
@@ -48,11 +48,14 @@ Disconnects the client, no reconnect.
 
 - `.releaseJob(job)` releases a `job`
 
-- `.checkJob()` return `true` if there is avalable for release job in tubes *used* by client. Return false if not. 
+- `.checkJob()` return `true` if there is avalable for release job in tube *used* by client. Return false if not. 
 Dont reserve jobs, just check. 
 
 - `.putJob(data)` put job to a tube *used* by a client
   - `data` payload for future job.
+  
+- `deleteJob(job)` delete job
+  - `job` job object 
 
 - `.statsTube(name)` Return stats of tube
   - `name` name of tube
