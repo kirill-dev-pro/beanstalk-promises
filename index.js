@@ -146,6 +146,17 @@ module.exports = class Beanstalk {
     })
   }
 
+  stats() {
+    return new Promise((resolve, reject)=>{
+      this.client.stats(function(err, res){
+        if (!err)
+          resolve(res)
+        else
+          reject(err)
+      });
+    })
+  }
+
   statsTube(name) {
     return new Promise((resolve, reject)=>{
       this.client.stats_tube(name, function(err, res){
