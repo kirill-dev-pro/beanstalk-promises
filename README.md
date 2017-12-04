@@ -1,16 +1,16 @@
-# beanstalk-promises [![Code Climate](https://codeclimate.com/github/Zmeu213/beanstalk-promises/badges/gpa.svg)](https://codeclimate.com/github/Zmeu213/beanstalk-promises) [![Test Coverage](https://codeclimate.com/github/Zmeu213/beanstalk-promises/badges/coverage.svg)](https://codeclimate.com/github/Zmeu213/beanstalk-promises/coverage) [![Issue Count](https://codeclimate.com/github/Zmeu213/beanstalk-promises/badges/issue_count.svg)](https://codeclimate.com/github/Zmeu213/beanstalk-promises)
+# beanstalk-promises [![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard) [![Test Coverage](https://codeclimate.com/github/Zmeu213/beanstalk-promises/badges/coverage.svg)](https://codeclimate.com/github/Zmeu213/beanstalk-promises/coverage) [![Issue Count](https://codeclimate.com/github/Zmeu213/beanstalk-promises/badges/issue_count.svg)](https://codeclimate.com/github/Zmeu213/beanstalk-promises)
 Promise wraper for fivebeans client so you can use promises instead of callbacks and await them
 
 ### Quick start
 ```javascript
-const Beanstalk = require('beanstalk-promises');
+const Beanstalk = require('beanstalk-promises')
 
 async function main () {
-	let client = new Beanstalk();
-	await client.connect('127.0.0.1', 11300, 1000);
-	await client.watchTube('test');
-	let job = await client.getJob();
-	await client.quit();
+	let client = new Beanstalk()
+	await client.connect('127.0.0.1', 11300, 1000)
+	await client.watchTube('test')
+	let job = await client.getJob()
+	await client.quit()
 }
 
 main()
