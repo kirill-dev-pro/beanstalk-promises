@@ -57,6 +57,8 @@ Dont reserve jobs, just check.
 - `deleteJob(job)` delete job
   - `job` job object 
 
+- `.stats()` Return stats of the server
+
 - `.statsTube(name)` Return stats of tube
   - `name` name of tube
 
