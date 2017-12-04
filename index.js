@@ -1,181 +1,149 @@
-const fivebeans = require('fivebeans');
+const fivebeans = require('fivebeans')
+const debug = require('debug')('beanstalk')
+
+const DEFAULT_TTL = 60 // 1 min
 
 module.exports = class Beanstalk {
-  constructor(debug, default_ttl) {
-    this.debug = !!debug;
-    this.default_ttl = default_ttl || 60; // 1 min
+  constructor (debug = false, ttl) {
+    this.debug = !!debug // debug log is disabled by default
+    this.defaultTTL = ttl || DEFAULT_TTL
   }
 
-  connect(host, port, reconnect) {
-    return new Promise((resolve, reject)=>{
+  connect (host, port, reconnect) {
+    return new Promise((resolve, reject) => {
       try {
-        let that = this; // Becouse of this is not always this
-        that.client = new fivebeans.client(host, port); // default is 127.0.0.1 and 11300
-        that.reconnect = reconnect || 1000; // timeout to reconnect, set 0 to disable reconnecting
-        that.client.on('connect', function() {
-          if (that.debug) console.log('Connected to beanstalk');
-          resolve();
+        const that = this                               // Becouse of this is not always this
+        that.client = new fivebeans.client(host, port)  // eslint-disable-line new-cap
+                                                        // default is 127.0.0.1 and 11300
+        that.reconnect = reconnect || 1000              // timeout to reconnect, set 0 to disable reconnecting
+        that.client.on('connect', function () {
+          if (that.debug) debug('Connected to beanstalk')
+          resolve()
         })
-        .on('close', function(err){
-          if (err)
-          that.client.end()
-          if (that.debug) console.log('Beanstalk connection closed');
+        .on('close', function (err) {
+          if (err) that.client.end()
+          if (that.debug) debug('Beanstalk connection closed')
           if (that.reconnect) {
-            that.connect(host, port, reconnect).then(()=>{
-              if (that.debug) console.log('Reconnected to beanstalk');
+            that.connect(host, port, reconnect).then(() => {
+              if (that.debug) debug('Reconnected to beanstalk')
               resolve()
             })
           } else {
-            if (that.debug) console.log('No reconnection');
+            if (that.debug) debug('No reconnection')
           }
         }).connect()
-      } catch(err) {
-        reject(err)
-      }
-    })
-  }
-
-  quit() {
-    return new Promise((resolve, reject)=>{
-      try {
-        this.reconnect = null;
-        this.client.quit();
-        resolve();
       } catch (err) {
         reject(err)
       }
     })
   }
 
-  watchTube(tube) {
-    return new Promise((resolve,reject)=>{
-      this.client.watch(tube, (err, numwatched)=>{
-        if (!err)
-          resolve(numwatched);
-        else
-          reject(err)
-      })
-    })
-  }
-
-  useTube(tube) {
-    return new Promise((resolve,reject)=>{
-      this.client.use(tube, (err, usedTube)=>{
-        if (!err)
-          resolve(usedTube);
-        else
-          reject(err)
-      })
-    })
-  }
-
-  deleteJob(job) {
-    return new Promise((resolve, reject)=>{
-      this.client.destroy(job.id, (err)=>{
-        if (!err)
-          resolve()
-        else
-          reject(err)
-      })
-    })
-  }
-
-  releaseJob(job) {
-    return new Promise((resolve, reject)=>{
-      this.client.release(job.id, 1, 1, (err)=>{
-        if (!err)
-          resolve()
-        else
-          reject(err)
-      })
-    })
-  }
-
-  buryJob(job) {
-    return new Promise((resolve, reject)=>{
-      this.client.bury(job.id, 0, (err)=>{
-        if (!err)
-          resolve()
-        else
-          reject(err)
-      })
-    })
-  }
-
-  getJob() {
-    return new Promise((resolve, reject)=>{
-      this.client.reserve((err, jobid, payload)=>{
-        if (!err) {
-          let job = {
-            id: jobid,
-            data: JSON.parse(payload.toString())
-          };
-          resolve(job)
-        } else {
-          console.log(err);
-          reject(err)
-        }
-      })
-    })
-  }
-
-  checkJob() {
+  quit () {
     return new Promise((resolve, reject) => {
-      this.client.peek_ready((err, jobid, payload)=>{
-        if (!err && jobid)
-          resolve(true);
-        else if (err === 'NOT_FOUND')
-          resolve(false);
-        else
-          reject(err)
-      })
+      try {
+        this.reconnect = null
+        this.client.quit()
+        resolve()
+      } catch (err) {
+        reject(err)
+      }
     })
   }
 
-  putJob(data) {
-    return new Promise((resolve, reject)=>{
-      data = JSON.stringify(data);
-      this.client.put(0, 0, data._ttl || (this.default_ttl*2), data, function(err, jobid) {
+  watchTube (tube) {
+    return new Promise((resolve, reject) =>
+      this.client.watch(tube, (err, numwatched) =>
+        !err ? resolve(numwatched) : reject(err)))
+  }
+
+  useTube (tube) {
+    return new Promise((resolve, reject) =>
+      this.client.use(tube, (err, usedTube) =>
+        !err ? resolve(usedTube) : reject(err)))
+  }
+
+  deleteJob (job) {
+    return new Promise((resolve, reject) =>
+      this.client.destroy(job.id, err =>
+        !err ? resolve() : reject(err)))
+  }
+
+  releaseJob (job) {
+    return new Promise((resolve, reject) =>
+      this.client.release(job.id, 1, 1, err =>
+        !err ? resolve() : reject(err)))
+  }
+
+  buryJob (job) {
+    return new Promise((resolve, reject) =>
+      this.client.bury(job.id, 0, (err) =>
+        !err ? resolve() : reject(err)))
+  }
+
+  getJob () {
+    return new Promise((resolve, reject) =>
+      this.client.reserve((err, jobid, payload) => {
         if (!err) {
-          resolve(jobid);
+          try {
+            let job = {
+              id: jobid,
+              data: JSON.parse(payload.toString())
+            }
+            resolve(job)
+          } catch (error) {
+            reject(error)
+          }
         } else {
-          console.log(err);
-          reject(err);
+          debug(err)
+          reject(err)
         }
-      });
-    })
+      })
+    )
   }
 
-  stats() {
-    return new Promise((resolve, reject)=>{
-      this.client.stats(function(err, res){
-        if (!err)
-          resolve(res)
-        else
+  checkJob () {
+    return new Promise((resolve, reject) =>
+      this.client.peek_ready((err, jobid, payload) => {
+        if (!err && jobid) {
+          resolve(true)
+        } else if (err === 'NOT_FOUND') {
+          resolve(false)
+        } else {
           reject(err)
-      });
-    })
+        }
+      })
+    )
   }
 
-  statsTube(name) {
-    return new Promise((resolve, reject)=>{
-      this.client.stats_tube(name, function(err, res){
-        if (!err)
-          resolve(res)
-        else
+  putJob (data) {
+    return new Promise((resolve, reject) => {
+      data = JSON.stringify(data)
+      this.client.put(0, 0, data._ttl || (this.defaultTTL * 2), data, function (err, jobid) {
+        if (!err) {
+          resolve(jobid)
+        } else {
+          debug(err)
           reject(err)
-      });
-    })
-  }
-
-  listTubes() {
-    return new Promise((resolve, reject)=>{
-      this.client.list_tubes((err, tubenames)=>{
-        if (err)
-          reject(err)
-        else
-          resolve(tubenames)
+        }
       })
     })
+  }
+
+  stats () {
+    return new Promise((resolve, reject) =>
+      this.client.stats((err, res) =>
+        !err ? resolve(res) : reject(err)))
+  }
+
+  statsTube (name) {
+    return new Promise((resolve, reject) =>
+      this.client.stats_tube(name, (err, res) =>
+        !err ? resolve(res) : reject(err)))
+  }
+
+  listTubes () {
+    return new Promise((resolve, reject) =>
+      this.client.list_tubes((err, tubenames) =>
+        !err ? resolve(tubenames) : reject(err)))
   }
 }
