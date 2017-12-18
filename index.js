@@ -115,10 +115,10 @@ module.exports = class Beanstalk {
     )
   }
 
-  putJob (data) {
+  putJob (data, priority = 0, delay = 0) {
     return new Promise((resolve, reject) => {
       data = JSON.stringify(data)
-      this.client.put(0, 0, data._ttl || (this.defaultTTL * 2), data, function (err, jobid) {
+      this.client.put(priority, delay, data._ttl || (this.defaultTTL * 2), data, function (err, jobid) {
         if (!err) {
           resolve(jobid)
         } else {

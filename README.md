@@ -51,8 +51,10 @@ Disconnects the client, no reconnect.
 - `.checkJob()` return `true` if there is avalable for release job in tube *used* by client. Return false if not. 
 Dont reserve jobs, just check. 
 
-- `.putJob(data)` put job to a tube *used* by a client
+- `.putJob(data, priority, delay)` put job to a tube *used* by a client
   - `data` payload for future job.
+  - `priority` smaller integer means higher priority. Default is `0`.
+  - `delay` delay in seconds. Default is `0`.
   
 - `deleteJob(job)` delete job
   - `job` job object 
