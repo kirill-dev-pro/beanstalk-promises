@@ -1,6 +1,6 @@
 {
   "name": "beanstalk-promises",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Promise wraper for fivebeans client so you can use promises instead of callbacks and await them",
   "main": "index.js",
   "scripts": {
