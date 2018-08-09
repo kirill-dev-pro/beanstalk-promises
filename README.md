@@ -32,7 +32,7 @@ Disconnects the client, no reconnect.
 - `.watchTube(tube)` return number of watched tubes
   - `tube` name of tube to watch 
   
-- `.useTube(tube)` return name of tube used used by client
+- `.useTube(tube)` return name of tube used by client
   - `tube` name of tube to use
   
 - `.getJob()` return a `job`. Get available for reserve job from *tubes* watched by client.
