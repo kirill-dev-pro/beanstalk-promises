@@ -12,26 +12,26 @@ module.exports = class Beanstalk {
   connect (host, port, reconnect) {
     return new Promise((resolve, reject) => {
       try {
-        const that = this                               // Becouse of this is not always this
-        that.client = new fivebeans.client(host, port)  // eslint-disable-line new-cap
-                                                        // default is 127.0.0.1 and 11300
-        that.reconnect = reconnect || 1000              // timeout to reconnect, set 0 to disable reconnecting
+        const that = this // Becouse of this is not always this
+        that.client = new fivebeans.client(host, port) // eslint-disable-line new-cap
+        // default is 127.0.0.1 and 11300
+        that.reconnect = reconnect || 1000 // timeout to reconnect, set 0 to disable reconnecting
         that.client.on('connect', function () {
           if (that.debug) debug('Connected to beanstalk')
           resolve()
         })
-        .on('close', function (err) {
-          if (err) that.client.end()
-          if (that.debug) debug('Beanstalk connection closed')
-          if (that.reconnect) {
-            that.connect(host, port, reconnect).then(() => {
-              if (that.debug) debug('Reconnected to beanstalk')
-              resolve()
-            })
-          } else {
-            if (that.debug) debug('No reconnection')
-          }
-        }).connect()
+          .on('close', function (err) {
+            if (err) that.client.end()
+            if (that.debug) debug('Beanstalk connection closed')
+            if (that.reconnect) {
+              that.connect(host, port, reconnect).then(() => {
+                if (that.debug) debug('Reconnected to beanstalk')
+                resolve()
+              })
+            } else {
+              if (that.debug) debug('No reconnection')
+            }
+          }).connect()
       } catch (err) {
         reject(err)
       }
@@ -53,7 +53,7 @@ module.exports = class Beanstalk {
   watchTube (tube) {
     return new Promise((resolve, reject) =>
       this.client.watch(tube, (err, numwatched) =>
-        !err ? resolve(numwatched) : reject(err)))
+        !err ? resolve(parseInt(numwatched, 10)) : reject(err)))
   }
 
   useTube (tube) {
@@ -85,8 +85,8 @@ module.exports = class Beanstalk {
       this.client.reserve((err, jobid, payload) => {
         if (!err) {
           try {
-            let job = {
-              id: jobid,
+            const job = {
+              id: parseInt(jobid, 10),
               data: JSON.parse(payload.toString())
             }
             resolve(job)
@@ -120,7 +120,7 @@ module.exports = class Beanstalk {
       data = JSON.stringify(data)
       this.client.put(priority, delay, data._ttl || (this.defaultTTL * 2), data, function (err, jobid) {
         if (!err) {
-          resolve(jobid)
+          resolve(parseInt(jobid, 10))
         } else {
           debug(err)
           reject(err)

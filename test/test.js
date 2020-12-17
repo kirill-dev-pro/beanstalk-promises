@@ -24,12 +24,12 @@ describe('Beanstalk', function () {
       await client.connect()
     })
     it('should watch test tube and return number of watched by client tubes', async function () {
-      let numwatched = await client.watchTube('test')
-      assert.equal(numwatched, 2)
+      const numwatched = await client.watchTube('test')
+      assert.strictEqual(numwatched, 2)
     })
     it('should use test tube and return name of tube being used', async function () {
-      let usedTube = await client.useTube('test')
-      assert.equal(usedTube, 'test')
+      const usedTube = await client.useTube('test')
+      assert.strictEqual(usedTube, 'test')
     })
     after(async function () {
       client.quit()
@@ -43,18 +43,18 @@ describe('Beanstalk', function () {
       await client.useTube('test')
     })
     it('should check if ready job is in tube and respond with false', async function () {
-      let check = await client.checkJob()
-      assert.equal(check, false)
+      const check = await client.checkJob()
+      assert.strictEqual(check, false)
     })
     it('should put job and respond with job id', async function () {
-      let sampleJob = {key: 'value'}
-      let jobid = await client.putJob(sampleJob)
+      const sampleJob = { key: 'value' }
+      const jobid = await client.putJob(sampleJob)
       jobSaved = jobid
-      assert.equal(jobid, parseInt(jobid, 10))
+      assert.strictEqual(typeof jobid, 'number')
     })
     it('should check if job is in tube with status ready and respond with true', async function () {
-      let check = await client.checkJob()
-      assert.equal(check, true)
+      const check = await client.checkJob()
+      assert.strictEqual(check, true)
     })
     after(async function () {
       client.quit()
@@ -70,8 +70,8 @@ describe('Beanstalk', function () {
     })
     it('should get job from tube', async function () {
       job = await client.getJob()
-      assert.equal(job.id, jobSaved)
-      assert.equal(job.data.key, 'value')
+      assert.strictEqual(job.id, jobSaved)
+      assert.strictEqual(job.data.key, 'value')
     })
     it('should delete job by id', async function () {
       await client.deleteJob(job)
