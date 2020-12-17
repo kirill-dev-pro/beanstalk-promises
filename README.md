@@ -1,4 +1,8 @@
-# beanstalk-promises [![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard) [![Test Coverage](https://codeclimate.com/github/Zmeu213/beanstalk-promises/badges/coverage.svg)](https://codeclimate.com/github/Zmeu213/beanstalk-promises/coverage) [![Issue Count](https://codeclimate.com/github/Zmeu213/beanstalk-promises/badges/issue_count.svg)](https://codeclimate.com/github/Zmeu213/beanstalk-promises)
+# beanstalk-promises
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![Test Coverage](https://codeclimate.com/github/Zmeu213/beanstalk-promises/badges/coverage.svg)](https://codeclimate.com/github/Zmeu213/beanstalk-promises/coverage) 
+[![Issue Count](https://codeclimate.com/github/Zmeu213/beanstalk-promises/badges/issue_count.svg)](https://codeclimate.com/github/Zmeu213/beanstalk-promises)
+
 Promise wraper for fivebeans client so you can use promises instead of callbacks and await them
 
 ### Quick start
