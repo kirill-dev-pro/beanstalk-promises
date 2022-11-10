@@ -28,7 +28,7 @@
     "url": "https://github.com/Zmeu213/beanstalk-promises/issues"
   },
   "devDependencies": {
-    "mocha": "^8.2.1",
+    "mocha": "^10.1.0",
     "standard": "^16.0.3"
   }
 }
